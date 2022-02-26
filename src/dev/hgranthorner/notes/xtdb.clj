@@ -36,7 +36,9 @@
   (reify p/Repository
     (get-notes [_]
       (query '{:find  [(pull ?e [*])]
-               :where [[?e :dev.hgranthorner.notes.core/name _]]}))))
+               :where [[?e :dev.hgranthorner.notes.core/name _]]}))
+    (put [_ x]
+      (put x))))
 
 (comment
 
