@@ -17,6 +17,16 @@
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
           <%= @current_user.email %>
         </li>
+	<%= if @is_admin do %>
+        <li>
+          <.link
+            href={~p"/dev/dashboard"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Dev Dashboard
+          </.link>
+        </li>
+	<% end %>
         <li>
           <.link
             href={~p"/users/settings"}
