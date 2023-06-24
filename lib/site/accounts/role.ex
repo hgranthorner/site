@@ -16,4 +16,8 @@ defmodule Site.Accounts.Role do
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
+
+  def is_admin(user) do
+    user && user.roles && Enum.any?(user.roles, fn r -> r.name == "admin" end)
+  end
 end

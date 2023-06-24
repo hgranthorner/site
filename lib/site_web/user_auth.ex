@@ -5,6 +5,7 @@ defmodule SiteWeb.UserAuth do
   import Phoenix.Controller
 
   alias Site.Accounts
+  alias Site.Accounts.Role
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -93,8 +94,7 @@ defmodule SiteWeb.UserAuth do
     user = user_token && Accounts.get_user_by_session_token(user_token)
     conn
     |> assign(:current_user, user)
-    |> assign(:is_admin, 
-      user && user.roles && Enum.any?(user.roles, fn r -> r.name == "admin" end))
+    |> assign(:is_admin, Role.is_admin(user))
   end
 
   defp ensure_user_token(conn) do
@@ -179,6 +179,12 @@ defmodule SiteWeb.UserAuth do
     Phoenix.Component.assign_new(socket, :current_user, fn ->
       if user_token = session["user_token"] do
         Accounts.get_user_by_session_token(user_token)
+      end
+    end)
+    |> Phoenix.Component.assign_new(:is_admin, fn ->
+      if user_token = session["user_token"] do
+        user = Accounts.get_user_by_session_token(user_token)
+        Role.is_admin(user)
       end
     end)
   end

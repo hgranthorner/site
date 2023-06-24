@@ -231,7 +231,7 @@ defmodule Site.Accounts do
   """
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query |> IO.inspect)
+    Repo.one(query)
   end
 
   @doc """
