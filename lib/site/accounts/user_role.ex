@@ -1,6 +1,5 @@
 defmodule Site.Accounts.UserRole do
   use Ecto.Schema
-  import Ecto.Changeset
 
   schema "users_roles" do
     belongs_to :user, Site.Accounts.User

@@ -11,7 +11,7 @@ defmodule Site.Accounts.Role do
   @doc """
   A role changeset for insertion.
   """
-  def registration_changeset(role, attrs, opts \\ []) do
+  def registration_changeset(role, attrs, _opts \\ []) do
     role
     |> cast(attrs, [:name])
     |> validate_required([:name])

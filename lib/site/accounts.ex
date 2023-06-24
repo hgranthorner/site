@@ -6,7 +6,7 @@ defmodule Site.Accounts do
   import Ecto.Query, warn: false
   alias Site.Repo
 
-  alias Site.Accounts.{User, UserToken, UserRole, Role, UserNotifier}
+  alias Site.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
 
