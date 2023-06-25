@@ -6,7 +6,7 @@ defmodule Site.Accounts do
   import Ecto.Query, warn: false
   alias Site.Repo
 
-  alias Site.Accounts.{User, UserToken, UserNotifier}
+  alias Site.Accounts.{Role, User, UserRole, UserToken, UserNotifier}
 
   ## Database getters
 
@@ -24,6 +24,18 @@ defmodule Site.Accounts do
   """
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User.with_roles, email: email)
+  end
+
+  @doc """
+  Gets all users.
+
+  ## Examples
+
+      iex> get_users()
+      [%User{}]
+  """
+  def get_users() do
+    Repo.all(User.with_roles)
   end
 
   @doc """
@@ -349,5 +361,19 @@ defmodule Site.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def change_role(%User{} = user, :add, role_name) when is_binary(role_name) do
+    role = Repo.get_by(Role, name: role_name)
+    IO.inspect(user: user)
+    IO.inspect(role: role)
+    Repo.insert %UserRole{user_id: user.id, role_id: role.id, user: user, role: role}
+  end
+
+  def change_role(%User{} = user, :remove, role_name) when is_binary(role_name) do
+    role = Repo.get_by(Role, name: role_name)
+    IO.inspect(user: user)
+    IO.inspect(role: role)
+    Repo.delete %UserRole{user_id: user.id, role_id: role.id, user: user, role: role}
   end
 end

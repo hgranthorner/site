@@ -82,4 +82,14 @@ defmodule SiteWeb.Router do
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
+
+  # Admin routes
+  scope "/admin/", SiteWeb do
+    pipe_through [:browser, :require_admin]
+
+    live_session :admin_user,
+      on_mount: [{SiteWeb.UserAuth, :mount_current_user}] do
+        live "/users", ManageUsersLive, :view
+      end
+  end
 end
