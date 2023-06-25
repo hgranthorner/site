@@ -9,32 +9,24 @@ defmodule SiteWeb.ManageUsersLive do
 
   def render(assigns) do
     ~H"""
-    <h1 class="text-[2rem] mt-4 font-semibold leading-10 tracking-tighter text-zinc-900">Users</h1>
-    <table>
+    <h1 class="text-[2rem] mt-4 font-semibold leading-10 tracking-tighter text-zinc-900 mb-4">Users</h1>
+    <table class="border">
       <tr>
-        <th>Email</th>
-        <th>Is Admin?</th>
+        <th class="p-1 text-center">Email</th>
+        <th class="p-1 text-center">Is Admin?</th>
       </tr>
       <tbody>
         <%= for user <- @users do %>
           <tr>
-            <th><%= user.email %></th>
-            <th>
-              <%= if Role.is_admin(user) do %>
+            <td class="p-1 text-center"><%= user.email %></td>
+            <td class="p-1 text-center">
                 <input 
                   phx-click="toggle_admin" 
                   phx-value-user-id={user.id}
                   type="checkbox"
-                  checked
+                  checked={Role.is_admin(user)}
                 >
-              <% else %>
-              <input
-                phx-click="toggle_admin"
-                phx-value-user-id={user.id}
-                type="checkbox"
-              >
-              <% end %>
-            </th>
+            </td>
           </tr>
         <% end %>
       </tbody>
