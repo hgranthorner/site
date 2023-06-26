@@ -3,17 +3,24 @@ defmodule Site.Accounts.RoleTest do
 
   alias Site.Accounts.{Role, User}
 
+  defp user_fixture do
+    %User{email: "", password: "", hashed_password: "", confirmed_at: nil, roles: []}
+  end
+
   describe "is_admin/1" do
     test "confirms that a user is an admin" do
-      refute Accounts.get_user_by_email("unknown@example.com")
+      user = user_fixture()
+      user = %{user | roles: [%Role{name: "admin"}]}
+      assert Role.is_admin(user)
     end
 
     test "denies that a user is not an admin" do
-      %{id: id} = user = user_fixture()
-      assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
+      user = user_fixture()
+      refute Role.is_admin(user)
     end
 
     test "denies an nil user" do
+      refute Role.is_admin(nil)
     end
   end
 end
