@@ -43,17 +43,42 @@ defmodule SiteWeb.BookmarksLive do
     {:ok, socket}
   end
 
-  def handle_event("validate_bookmark", 
-    %{ "bookmark" => bookmark },
-      socket) do
+  def handle_event(
+        "validate_bookmark",
+        %{"bookmark" => bookmark},
+        socket
+      ) do
     user = socket.assigns.current_user
-    
-    attrs = Map.put(bookmark, "user_id", user.id)
-            |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
-    bkmk_form = %Bookmark{}
-                |> Bookmark.changeset(attrs)
-                |> Map.put(:action, :validate)
-                |> to_form()
+
+    attrs =
+      Map.put(bookmark, "user_id", user.id)
+      |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
+    bkmk_form =
+      %Bookmark{}
+      |> Bookmark.changeset(attrs)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, bookmark_form: bkmk_form)}
+  end
+
+  def handle_event(
+        "add_bookmark",
+        %{"bookmark" => bookmark},
+        socket
+      ) do
+    user = socket.assigns.current_user
+
+    attrs =
+      Map.put(bookmark, "user_id", user.id)
+      |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
+    bkmk_form =
+      %Bookmark{}
+      |> Bookmark.changeset(attrs)
+      |> Map.put(:action, :insert)
+      |> to_form()
 
     {:noreply, assign(socket, bookmark_form: bkmk_form)}
   end
