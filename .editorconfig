@@ -4,8 +4,8 @@ root = true
 indent_style = space
 indent_size = 2
 
-[/assets/*]
+[*/assets/*]
 generated_code = true
 
-[/_build/*]
+[*/_build/*]
 generated_code = true

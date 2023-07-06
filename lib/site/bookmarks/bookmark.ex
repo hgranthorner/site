@@ -21,5 +21,6 @@ defmodule Site.Bookmarks.Bookmark do
     bkmk
     |> cast(attrs, [:url, :name, :user_id], opts)
     |> validate_required([:url, :name, :user_id])
+    |> unique_constraint(:name)
   end
 end

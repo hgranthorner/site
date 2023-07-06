@@ -11,6 +11,14 @@ defmodule SiteWeb.BookmarksLive do
     </.header>
 
     <div class="space-y-12 divide-y">
+      <ul>
+        <li :for={bkmk <- @bookmarks}>
+          <div class="mb-2">
+            <p><%= bkmk.name %></p>
+            <a href={bkmk.url}><%= bkmk.url %></a>
+          </div>
+        </li>
+     </ul>
       <div>
         <.simple_form
           for={@bookmark_form}
@@ -31,13 +39,12 @@ defmodule SiteWeb.BookmarksLive do
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user
-    bkmk_changeset = Bookmark.changeset()
     bkmks = Bookmarks.get_user_bookmarks(user)
 
     socket =
       socket
       |> assign(:bookmarks, bkmks)
-      |> assign(:bookmark_form, to_form(bkmk_changeset))
+      |> assign(:bookmark_form, new_bookmark_form())
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
@@ -69,17 +76,22 @@ defmodule SiteWeb.BookmarksLive do
         socket
       ) do
     user = socket.assigns.current_user
+    bkmks = socket.assigns.bookmarks
 
     attrs =
       Map.put(bookmark, "user_id", user.id)
       |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
 
-    bkmk_form =
-      %Bookmark{}
-      |> Bookmark.changeset(attrs)
-      |> Map.put(:action, :insert)
-      |> to_form()
+    socket = case Bookmarks.add_bookmark(attrs) do
+      {:ok, bkmk} -> socket
+        |> assign(bookmarks: [bkmk | bkmks])
+        |> assign(bookmark_form: new_bookmark_form())
+      {:error, changeset} -> socket
+        |> assign(bookmark_form: to_form(changeset))
+    end
 
-    {:noreply, assign(socket, bookmark_form: bkmk_form)}
+    {:noreply, socket}
   end
+
+  defp new_bookmark_form, do: Bookmark.changeset() |> to_form()
 end
